@@ -1,47 +1,49 @@
 #include <msp430.h>
 #include "led.h"
+#include "switches.h"
+#include "buzzer.h"
 
-void led_init() {
-    P1DIR |= LEDS;            // Set LED pins as outputs
-    led_update();
+unsigned char led_changed = 0, green_on = 0, red_on = 0, led_state = 0; // Define global variables
+static char redVal[] = {0, LED_RED}, greenVal[] = {0, LED_GREEN};
+char frequency;
+static char ledFlags = 0;
+
+// Keep P1 because LEDs are on the board
+void led_init()
+{
+  P1DIR |= LEDS;           // bits attached to LEDs are output
+  led_changed = 1;
+  led_update();
 }
 
-void led_update() {
-    P1OUT &= ~LEDS; // Turn off both LEDs initially
-    if (led_state) {
-        P1OUT |= LED_GREEN;
-    } else {
-        P1OUT |= LED_RED;
+void led_update()
+{
+  if (led_changed)
+  {
+    ledFlags = 0;
+    if (!(led_state))
+    {
+      ledFlags |= LED_RED;
     }
-}
-
-void led_pattern1() {
-    for (int i = 0; i < 3; i++) {
-        P1OUT |= LED_RED;
-        __delay_cycles(500000);
-        P1OUT &= ~LED_RED;
-        __delay_cycles(500000);
+    else
+    {
+      ledFlags |= LED_GREEN;
     }
+
+    P1OUT &= (0xff ^ LEDS) | ledFlags; // clear bit for off LEDs
+    P1OUT |= ledFlags;                 // set bit for on LEDs
+    led_changed = 0;
+  }
 }
 
-void led_pattern2() {
-    for (int i = 0; i < 5; i++) {
-        P1OUT ^= LED_GREEN;
-        __delay_cycles(300000);
-    }
+void led_toggle()
+{
+  led_state = 1 - led_state;
+  led_changed = 1;
 }
 
-void led_pattern3() {
-    for (int i = 0; i < 2; i++) {
-        P1OUT |= LED_RED;
-        __delay_cycles(700000);
-        P1OUT &= ~LED_RED;
-    }
-}
-
-void led_pattern4() {
-    P1OUT |= LED_GREEN;
-    __delay_cycles(200000);
-    P1OUT &= ~LED_GREEN;
-    __delay_cycles(200000);
+void led_advance()
+{
+  led_state += 1;
+  led_changed = 1;
 }
