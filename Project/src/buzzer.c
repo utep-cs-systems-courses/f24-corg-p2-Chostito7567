@@ -1,10 +1,8 @@
 #include <msp430.h>
 #include "libTimer.h"
 #include "buzzer.h"
-#define MIN_SONG_LENGTH 900
-#define MAX_SONG_LENGTH 90000
-static unsigned int song_length = 2500;
-static signed int change_rate = 250;
+
+#define CLOCK_FREQUENCY 1000000  // Assuming 1 MHz clock frequency
 
 // Define different jingles (frequency in Hz and duration in ms)
 int jingle1[][2] = {{1000, 200}, {1200, 200}, {1400, 200}, {0, 0}};
@@ -14,13 +12,6 @@ int jingle4[][2] = {{2500, 400}, {2300, 400}, {2100, 400}, {0, 0}};
 
 // Initialize the buzzer
 void buzzer_init() {
-    /* 
-       Direct timer A output "TA0.1" to P2.6.  
-       According to table 21 from the datasheet:
-         P2SEL2.6, P2SEL2.7, and P2SEL.7 must be zero
-         P2SEL.6 must be 1
-       Also: P2.6 direction must be output
-    */
     timerAUpmode();		    /* used to drive speaker */
     P2SEL2 &= ~(BIT6 | BIT7);
     P2SEL &= ~BIT7; 
@@ -38,18 +29,20 @@ void buzzer_set_period(short cycles) {
 void play_jingle(int jingle[][2]) {
     for (int i = 0; jingle[i][0] != 0; i++) {
         buzzer_set_period(1000000 / jingle[i][0]); // Set frequency
-        delay_cycles(1000 * jingle[i][1]);      // Delay in ms
+        __delay_cycles((CLOCK_FREQUENCY / 1000) * jingle[i][1]); // Delay in cycles for milliseconds
     }
     buzzer_set_period(0); // Turn off the buzzer after playing
 }
 
 // Existing tone-shifting sound function
 void buzzer_play_sound() {
+    static unsigned int song_length = 2500;
+    static signed int change_rate = 250;
     song_length = (song_length + change_rate);
 
     // Positive Change Rate
     if (change_rate > 0) {
-        if (song_length > MAX_SONG_LENGTH) {
+        if (song_length > 90000) {
             change_rate = -change_rate; // Reverse the change
             song_length = song_length + (change_rate << 1);
         }
@@ -57,7 +50,7 @@ void buzzer_play_sound() {
 
     // Negative Change Rate
     if (change_rate < 0) {
-        if (song_length < MIN_SONG_LENGTH) {
+        if (song_length < 900) {
             change_rate = -change_rate; // Reverse the change
             song_length = song_length + (change_rate << 1);
         }
