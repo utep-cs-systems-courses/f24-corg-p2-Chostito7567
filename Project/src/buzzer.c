@@ -29,7 +29,8 @@ void buzzer_set_period(short cycles) {
 void play_jingle(int jingle[][2]) {
     for (int i = 0; jingle[i][0] != 0; i++) {
         buzzer_set_period(1000000 / jingle[i][0]); // Set frequency
-        __delay_cycles((CLOCK_FREQUENCY / 1000) * jingle[i][1]); // Delay in cycles for milliseconds
+        unsigned int delay_cycles = (CLOCK_FREQUENCY / 1000) * jingle[i][1]; // Calculate delay in cycles
+        __delay_cycles(delay_cycles); // Delay in cycles for milliseconds
     }
     buzzer_set_period(0); // Turn off the buzzer after playing
 }
