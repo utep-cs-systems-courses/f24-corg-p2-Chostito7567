@@ -6,4 +6,4 @@ char toggle_red();
 char toggle_green();
 char toggle_red_green();
 
-#endif // included
+#endif // stateMachine_included
