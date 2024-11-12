@@ -2,48 +2,51 @@
 #include "stateMachines.h"
 #include "led.h"
 #include "switches.h"
-#include "buzzer.h"  // Include the buzzer header for jingle handling
 
-// Enum to define LED modes
-static enum {off = 0, dim = 1, bright = 2} ledMode;
-static char pwmCount = 0;  // For PWM control
+// Declare external variables
+extern unsigned char led_changed, green_on, red_on, led_state;
 
-// Function to cycle LED brightness slowly
-void sm_slow_clock()  // Slowly cycle through {off, dim, bright}
+static enum {off=0, dim=1, bright=2} ledMode;
+static char pwmCount = 0;
+
+void sm_slow_clock()	/* slowly cycle through {off, dim, bright} */
 {
   ledMode = (ledMode + 1) % 3;
 }
 
-// Function to cycle LED brightness quickly
-void sm_fast_clock()  // Quickly cycle through 0...3
+void sm_fast_clock()	/* quickly cycle through 0...3 */
 {
-  pwmCount = (pwmCount + 1) & 3; 
+  pwmCount = (pwmCount + 1) & 3;
 }
 
-// Function to update the LED state
 void sm_update_led()
 {
   char new_red_on;
-  switch (ledMode) {
+  switch (ledMode)
+  {
   case off:
-    new_red_on = 0; break;
+    new_red_on = 0;
+    break;
   case bright:
-    new_red_on = 1; break;
+    new_red_on = 1;
+    break;
   case dim:
-    new_red_on = (pwmCount < 1); break;  // 25% duty cycle
+    new_red_on = (pwmCount < 1); // 25% duty cycle
+    break;
   }
-  if (red_on != new_red_on) {
+  if (red_on != new_red_on)
+  {
     red_on = new_red_on;
     led_changed = 1;
   }
 }
 
-// Function to toggle the red LED (always toggles)
-char toggle_red()
+char toggle_red()	/* always toggle! */
 {
   static char state = 0;
 
-  switch (state) {
+  switch (state)
+  {
   case 0:
     red_on = 1;
     state = 1;
@@ -53,70 +56,37 @@ char toggle_red()
     state = 0;
     break;
   }
-  return 1;  // Always changes an LED
+  return 1; // always changes an LED
 }
 
-// Function to toggle the green LED (only when red is on)
-char toggle_green()
+char toggle_green()	/* only toggle green if red is on!  */
 {
   char changed = 0;
-  if (red_on) {
+  if (red_on)
+  {
     green_on ^= 1;
     changed = 1;
   }
   return changed;
 }
 
-// Function to alternate between toggling red & green LEDs
-void state_advance()  
+void state_advance()		/* alternate between toggling red & green */
 {
-  char changed = 0;  
+  char changed = 0;
 
-  static enum {R = 0, G = 1} color = G;
-  switch (color) {
-  case R: 
-    changed = toggle_red(); 
-    color = G; 
+  static enum {R=0, G=1} color = G;
+  switch (color)
+  {
+  case R:
+    changed = toggle_red();
+    color = G;
     break;
-  case G: 
-    changed = toggle_green(); 
-    color = R; 
+  case G:
+    changed = toggle_green();
+    color = R;
     break;
   }
 
-  led_changed = changed;  // Update the LED change status
+  led_changed = changed; // switch_state_changed
   led_update();
-}
-
-// Function to handle the LED behavior and jingles based on button presses
-void handle_button_press(char button) 
-{
-  if (button == 1) {  // Button S1
-    led_state = 0; 
-    play_jingle(jingle1);  // Play jingle 1
-    led_changed = 1;
-    sm_update_led();  // Update LED state
-    led_update();
-  }
-  else if (button == 2) {  // Button S2
-    led_state = 0;
-    play_jingle(jingle2);  // Play jingle 2
-    led_changed = 1;
-    sm_update_led();
-    led_update();
-  }
-  else if (button == 3) {  // Button S3
-    led_state = 0;
-    play_jingle(jingle3);  // Play jingle 3
-    led_changed = 1;
-    sm_update_led();
-    led_update();
-  }
-  else if (button == 4) {  // Button S4
-    led_state = 0;
-    play_jingle(jingle4);  // Play jingle 4
-    led_changed = 1;
-    sm_update_led();
-    led_update();
-  }
 }
