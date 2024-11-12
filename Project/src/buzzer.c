@@ -1,30 +1,54 @@
 #include <msp430.h>
-#include "libTimer.h"
 #include "buzzer.h"
+#include "libTimer.h"
 
-#define MIN_SONG_LENGTH 900
-#define MAX_SONG_LENGTH 90000
-static unsigned int song_length = 2500;
-static signed int change_rate = 250;
-
-void buzzer_init()
-{
-    timerAUpmode();		    /* Used to drive speaker */
+void buzzer_init() {
+    // Configure P2.6 for buzzer output
+    timerAUpmode();
     P2SEL2 &= ~(BIT6 | BIT7);
-    P2SEL &= ~BIT7; 
+    P2SEL &= ~BIT7;
     P2SEL |= BIT6;
-    P2DIR = BIT6;		      /* Enable output to speaker (P2.6) */
-    buzzer_play_sound();  // Make Some Noise on initialization
+    P2DIR |= BIT6;
 }
 
-void buzzer_set_period(short cycles)
-{
-  CCR0 = cycles; 
-  CCR1 = cycles >> 1;		/* One half cycle */
+void buzzer_set_period(short cycles) {
+    CCR0 = cycles;
+    CCR1 = cycles >> 1; // 50% duty cycle
 }
 
-void buzzer_play_sound()
-{
-  buzzer_set_period(song_length);  // Use the global song_length
-  __delay_cycles(1000); // Simple delay between jingle sounds
+// Define different jingles for each button
+void play_jingle1() {
+    short jingle1[] = {1000, 0, 800, 0, 600, 0, 400, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle1[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0); // Turn off sound
+}
+
+void play_jingle2() {
+    short jingle2[] = {500, 0, 700, 0, 900, 0, 1100, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle2[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
+}
+
+void play_jingle3() {
+    short jingle3[] = {1200, 0, 1000, 0, 800, 0, 600, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle3[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
+}
+
+void play_jingle4() {
+    short jingle4[] = {1500, 0, 1300, 0, 1100, 0, 900, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle4[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
 }
