@@ -1,42 +1,30 @@
 #include <msp430.h>
 #include "led.h"
-#include "switches.h"
-#include "buzzer.h"
 
-// Keeping track of LED states
 unsigned char led_changed = 0, green_on = 0, red_on = 0, led_state = 0;
-static char redVal[] = {0, LED_RED}, greenVal[] = {0, LED_GREEN};
-char ledFlags = 0; // Make ledFlags accessible across files
 
 void led_init() {
-    P1DIR |= LEDS;             // Set LED pins as output
+    P1DIR |= LEDS; // Set LED pins as output
     led_changed = 1;
     led_update();
 }
 
 void led_update() {
     if (led_changed) {
-        ledFlags = 0;  // Clear previous LED flags
-
-        if (!led_state) {
-            ledFlags |= LED_RED;
-        } else {
-            ledFlags |= LED_GREEN;
+        switch (led_state) {
+        case 0:
+            P1OUT = LED_RED; // Only red LED on
+            break;
+        case 1:
+            P1OUT = LED_GREEN; // Only green LED on
+            break;
+        case 2:
+            P1OUT = LEDS; // Both LEDs on
+            break;
+        case 3:
+            P1OUT = 0; // Both LEDs off
+            break;
         }
-
-        P1OUT &= (0xff ^ LEDS) | ledFlags; // Clear bits for off LEDs
-        P1OUT |= ledFlags;                 // Set bits for on LEDs
-
         led_changed = 0;
     }
-}
-
-void led_toggle() {
-    led_state = 1 - led_state; // Toggle between 0 and 1
-    led_changed = 1;
-}
-
-void led_advance() {
-    led_state += 1; // Advance LED state
-    led_changed = 1;
 }
