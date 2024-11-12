@@ -8,7 +8,6 @@ static char redVal[] = {0, LED_RED}, greenVal[] = {0, LED_GREEN};
 char frequency;
 static char ledFlags = 0;
 
-// Keep P1 because LEDs are on the board
 void led_init()
 {
   P1DIR |= LEDS;           // bits attached to LEDs are output
