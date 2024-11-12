@@ -4,5 +4,6 @@
 void buzzer_init();
 void buzzer_set_period(short cycles);
 void buzzer_play_sound();
+void play_jingle(int jingle[][2]);
 
 #endif // included
