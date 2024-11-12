@@ -9,7 +9,6 @@ static signed int change_rate = 250;
 
 void buzzer_init()
 {
-    /* Set up timer to drive speaker */
     timerAUpmode();		    /* Used to drive speaker */
     P2SEL2 &= ~(BIT6 | BIT7);
     P2SEL &= ~BIT7; 
