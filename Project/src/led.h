@@ -5,11 +5,12 @@
 #define LED_GREEN BIT6             // P1.6
 #define LEDS (BIT0 | BIT6)
 
-void led_init();		/* initialize LEDs */
-void led_update();		/* update leds */
+void led_init();        /* Initialize LEDs */
+void led_update();      /* Update LEDs */
+void led_advance();     /* Advance LED pattern */
 
 extern unsigned char led_changed, green_on, red_on, led_state;
-void led_toggle();
-void led_advance();
+extern char freqeuency;
+extern char ledFlags;
 
-#endif
+#endif // led_included
