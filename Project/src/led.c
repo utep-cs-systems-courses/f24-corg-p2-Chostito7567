@@ -3,14 +3,14 @@
 #include "switches.h"
 #include "buzzer.h"
 
-unsigned char led_changed = 0, green_on = 0, red_on = 0, led_state = 0; // Define global variables
+unsigned char led_changed = 0, green_on = 0, red_on = 0, led_state = 0;
 static char redVal[] = {0, LED_RED}, greenVal[] = {0, LED_GREEN};
 char frequency;
 static char ledFlags = 0;
 
 void led_init()
 {
-  P1DIR |= LEDS;           // bits attached to LEDs are output
+  P1DIR |= LEDS;                    // Set bits for LEDs as output
   led_changed = 1;
   led_update();
 }
@@ -20,17 +20,15 @@ void led_update()
   if (led_changed)
   {
     ledFlags = 0;
-    if (!(led_state))
-    {
+    if (!(led_state)){
       ledFlags |= LED_RED;
     }
-    else
-    {
+    else {
       ledFlags |= LED_GREEN;
     }
 
-    P1OUT &= (0xff ^ LEDS) | ledFlags; // clear bit for off LEDs
-    P1OUT |= ledFlags;                 // set bit for on LEDs
+    P1OUT &= (0xff^LEDS) | ledFlags; // Clear bits for off LEDs
+    P1OUT |= ledFlags;               // Set bits for on LEDs
     led_changed = 0;
   }
 }
