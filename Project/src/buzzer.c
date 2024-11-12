@@ -1,72 +1,91 @@
 #include <msp430.h>
-#include "libTimer.h"
+#include "switches.h"
+#include "led.h"
+#include "stateMachines.h"
 #include "buzzer.h"
 
-#define CLOCK_FREQUENCY 1000000  // Assuming 1 MHz clock frequency for your MSP430
+short sound;
+char switch_state_down, period, switch_state_changed; /* effectively boolean */
 
-// Define different jingles (frequency in Hz and duration in ms)
-int jingle1[][2] = {{1000, 200}, {1200, 200}, {1400, 200}, {0, 0}};
-int jingle2[][2] = {{1500, 300}, {1300, 300}, {1100, 300}, {0, 0}};
-int jingle3[][2] = {{2000, 100}, {2200, 100}, {2400, 100}, {0, 0}};
-int jingle4[][2] = {{2500, 400}, {2300, 400}, {2100, 400}, {0, 0}};
-
-// Initialize the buzzer
-void buzzer_init() {
-    timerAUpmode();  /* used to drive speaker */
-    P2SEL2 &= ~(BIT6 | BIT7);
-    P2SEL &= ~BIT7; 
-    P2SEL |= BIT6;
-    P2DIR = BIT6;  /* enable output to speaker (P2.6) */
+static char 
+switch_update_interrupt_sense()
+{
+  char p2val = P2IN;
+  P2IES |= (p2val & SWITCHES);    /* if switch up, sense down */
+  P2IES &= (p2val | ~SWITCHES);    /* if switch down, sense up */
+  return p2val;
 }
 
-// Set buzzer frequency
-void buzzer_set_period(short cycles) {
-    CCR0 = cycles; 
-    CCR1 = cycles >> 1;  // one half cycle
+// Initialize Switch Control
+void switch_init()
+{  
+  P2REN |= SWITCHES;    /* enables resistors for switches */
+  P2IE = SWITCHES;      /* enable interrupts from switches */
+  P2OUT |= SWITCHES;    /* pull-ups for switches */
+  P2DIR &= ~SWITCHES;   /* set switches' bits for input */
+  switch_update_interrupt_sense();
+  switch_interrupt_handler();
+  led_update();  // Update LEDs at startup
 }
 
-// Custom delay function based on loop iteration
-void delay_ms(unsigned int ms) {
-    volatile unsigned int i, j;
-    for (i = 0; i < ms; i++) {
-        for (j = 0; j < 1000; j++) {
-            // Empty loop to create a delay
-            // This will give a rough delay depending on clock speed
-        }
-    }
-}
+// Change Button States
+void switch_interrupt_handler()
+{
+  char p2val = switch_update_interrupt_sense();
+  char sw_button_1 = (p2val & SW1) ? 0 : SW1;
+  char sw_button_2 = (p2val & SW2) ? 0 : SW2;
+  char sw_button_3 = (p2val & SW3) ? 0 : SW3;
+  char sw_button_4 = (p2val & SW4) ? 0 : SW4;
 
-// Plays a jingle based on the input array (frequency and duration pairs)
-void play_jingle(int jingle[][2]) {
-    for (int i = 0; jingle[i][0] != 0; i++) {
-        buzzer_set_period(1000000 / jingle[i][0]);  // Set frequency
-        
-        // Delay for the given duration (in ms)
-        delay_ms(jingle[i][1]);  // Delay in milliseconds
-    }
-    buzzer_set_period(0);  // Turn off the buzzer after playing
-}
+  // Button 1: Jingle 1 (set frequency, change LEDs)
+  if(sw_button_1)
+  {
+    led_state = 0;  // Example LED pattern for button 1
+    sound = 1000;
+    period = 10;
+    buzzer_play_sound();
+    led_changed = 1;
+    led_advance();
+    led_update();
+    switch_state_down = 1;
+  }
 
-// Existing tone-shifting sound function
-void buzzer_play_sound() {
-    static unsigned int song_length = 2500;
-    static signed int change_rate = 250;
-    song_length = (song_length + change_rate);
+  // Button 2: Jingle 2
+  if(sw_button_2)
+  {
+    led_state = 1;  // Another LED pattern for button 2
+    sound = 2000;
+    period = 20;
+    buzzer_play_sound();
+    led_changed = 1;
+    led_advance();
+    led_update();
+    switch_state_down = 1;
+  }
 
-    // Positive Change Rate
-    if (change_rate > 0) {
-        if (song_length > 90000) {
-            change_rate = -change_rate;  // Reverse the change
-            song_length = song_length + (change_rate << 1);
-        }
-    }
+  // Button 3: Jingle 3
+  if(sw_button_3)
+  {
+    led_state = 2;  // Another LED pattern for button 3
+    sound = 3000;
+    period = 30;
+    buzzer_play_sound();
+    led_changed = 1;
+    led_advance();
+    led_update();
+    switch_state_down = 1;
+  }
 
-    // Negative Change Rate
-    if (change_rate < 0) {
-        if (song_length < 900) {
-            change_rate = -change_rate;  // Reverse the change
-            song_length = song_length + (change_rate << 1);
-        }
-    }
-    buzzer_set_period(song_length);
+  // Button 4: Jingle 4
+  if(sw_button_4)
+  {
+    led_state = 3;  // Another LED pattern for button 4
+    sound = 4000;
+    period = 40;
+    buzzer_play_sound();
+    led_changed = 1;
+    led_advance();
+    led_update();
+    switch_state_down = 1;
+  }
 }
