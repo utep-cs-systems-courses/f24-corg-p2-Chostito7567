@@ -1,5 +1,5 @@
-#include "../lcdLib/lcdutils.h"  // Correct path to lcdutils.h
-#include "../lcdLib/lcddraw.h"   // Include lcddraw.h for drawing functions
+#include "../lib/lcdutils.h"  // Correct path to lcdutils.h
+#include "../lib/lcddraw.h"   // Correct path to lcddraw.h
 
 #define MAX_LIVES 3  // Maximum number of lives a player has
 
