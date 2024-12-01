@@ -1,6 +1,5 @@
-#include <msp430.h>
-#include "lcdutils.h"
-#include "lcddraw.h"
+#include "../lcdLib/lcdutils.h"  // Correct path to lcdutils.h
+#include "../lcdLib/lcddraw.h"   // Include lcddraw.h for drawing functions
 
 #define MAX_LIVES 3  // Maximum number of lives a player has
 
