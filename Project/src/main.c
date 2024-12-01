@@ -4,6 +4,7 @@
 #include "switches.h" // For button handling
 #include "buzzer.h"   // For sound effects
 
+
 // Function to generate random prompts (e.g., arrows or "?")
 char generate_prompt() {
     char prompts[] = {'↑', '↓', '←', '→', '?'}; // Possible prompts
