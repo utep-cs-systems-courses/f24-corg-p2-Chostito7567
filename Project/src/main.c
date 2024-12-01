@@ -1,17 +1,14 @@
 #include <msp430.h>
-#include "lcdgame.h"  // For LCD screen functionality
+#include "lcdgame.h"  // Include LCD screen functions
 #include "libTimer.h"
-#include "switches.h" // For button handling
-#include "buzzer.h"   // For sound effects
+#include "switches.h" // Include button handling
+#include "buzzer.h"   // Include buzzer functionality
 
-
-// Function to generate random prompts (e.g., arrows or "?")
 char generate_prompt() {
-    char prompts[] = {'↑', '↓', '←', '→', '?'}; // Possible prompts
+    char prompts[] = {'↑', '↓', '←', '→', '?'};  // Possible prompts
     return prompts[rand() % 5];  // Randomly select one
 }
 
-// Function to get the player's input based on button presses
 char get_player_input() {
     char p2val = P2IN;  // Read switch input
     if (!(p2val & SW1)) return '↑';
@@ -21,14 +18,13 @@ char get_player_input() {
     return '\0';  // No input detected
 }
 
-// Main game loop
 void play_game() {
-    lcd_game_init();  // Initialize the LCD screen
+    lcd_game_init();  // Initialize the LCD
     buzzer_init();    // Initialize the buzzer
 
-    while (1) {
+    while (lives > 0) {  // Continue the game until lives reach 0
         char prompt = generate_prompt();  // Generate a random prompt
-        lcd_display_prompt(prompt);       // Show the prompt on the screen
+        lcd_display_prompt(prompt);       // Display the prompt on the screen
 
         if (prompt != '?') {
             // Play a tone corresponding to the prompt
@@ -43,26 +39,23 @@ void play_game() {
             input = get_player_input();
         }
 
-        // Handle input
-        if (input == prompt || (prompt == '?' && input == '↑')) { // Example: '?' is tied to '↑'
-            lcd_correct_input();  // Show feedback for correct input
+        if (input == prompt || (prompt == '?' && input == '↑')) {  // Example: '?' requires UP
+            lcd_correct_input();  // Show correct feedback
         } else {
-            lcd_incorrect_input();  // Show feedback for incorrect input
+            lcd_incorrect_input();  // Show incorrect feedback
         }
 
-        if (lives <= 0) break;  // End game when lives reach 0
-        __delay_cycles(500000); // Wait before next prompt (adjust for game speed)
+        __delay_cycles(500000);  // Wait before the next prompt
     }
 
-    lcd_game_over();  // Show the game-over screen
+    lcd_game_over();  // Display the game-over screen
 }
 
-// Main function
 void main() {
-    configureClocks();        // Set up system clocks
-    switch_init();            // Initialize the switches
-    enableWDTInterrupts();    // Enable watchdog timer interrupts
-    or_sr(0x8);               // Enable global interrupts (GIE)
+    configureClocks();  // Set up the clocks
+    switch_init();      // Initialize switches
+    enableWDTInterrupts();  // Enable interrupts
+    or_sr(0x8);         // Enable low-power mode
 
-    play_game();              // Start the game
+    play_game();  // Start the game
 }
