@@ -1,10 +1,6 @@
 #ifndef LCDGAME_H
 #define LCDGAME_H
 
-#include "../lcdLib/lcddraw.h"   // Path to lcddraw.h
-
-extern int lives;
-
 void lcd_game_init();           // Initialize the LCD
 void lcd_display_score();       // Display the player's score
 void lcd_display_lives();       // Display remaining lives
