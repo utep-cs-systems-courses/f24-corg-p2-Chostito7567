@@ -1,7 +1,8 @@
 #ifndef LCDGAME_H
 #define LCDGAME_H
 
-// Declare global variables and functions
+#include "../lcdLib/lcddraw.h"   // Path to lcddraw.h
+
 extern int lives;
 
 void lcd_game_init();           // Initialize the LCD
