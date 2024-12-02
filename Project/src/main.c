@@ -1,63 +1,52 @@
-#include <msp430.h>
-#include <stdlib.h>    // For rand()
-#include "buzzer.h"    // Provides play_jingle1, play_jingle2, etc.
-#include "libTimer.h"  // For configureClocks, enableWDTInterrupts, or_sr
-#include "lcdgame.h"   // LCD handling functions
-#include "switches.h"  // Button handling
+#include <stdint.h>  // Provides uint8_t, uint16_t, etc.
 
-// Generate a random prompt
+// Define missing types expected by lcddraw.h
+typedef unsigned char u_char;
+typedef unsigned int u_int;
+
+#include "./lcdLib/lcddraw.h"
+#include "./lcdLib/lcdutils.h"
+#include "buzzer.h"
+#include "libTimer.h"
+#include "lcdgame.h"
+#include "switches.h"
+
+// Generate a random prompt from available options
 char generate_prompt() {
-    char prompts[] = {'w', 's', 'a', 'd', '?'};  // w=UP, s=DOWN, a=LEFT, d=RIGHT
-    return prompts[rand() % 5];  // Return a random prompt
+    char prompts[] = {'w', 'a', 's', 'd', '?'};  // Available prompts
+    return prompts[rand() % 5];                  // Return a random prompt
 }
 
-// Read player input
-char get_player_input() {
-    char p2val = P2IN;  // Read switch input
-    if (!(p2val & SW1)) return 'w';  // SW1 for UP
-    if (!(p2val & SW2)) return 's';  // SW2 for DOWN
-    if (!(p2val & SW3)) return 'a';  // SW3 for LEFT
-    if (!(p2val & SW4)) return 'd';  // SW4 for RIGHT
-    return '\0';  // No input detected
-}
-
+// Main game logic
 void play_game() {
-    lcd_game_init();  // Initialize the LCD
-    buzzer_init();    // Initialize the buzzer
+    lcd_game_init();  // Initialize the game display
 
-    while (lives > 0) {  // Game runs until lives reach 0
-        char prompt = generate_prompt();  // Generate random prompt
-        lcd_display_prompt(prompt);       // Display the prompt on the LCD
+    while (1) {
+        char prompt = generate_prompt();  // Generate a random prompt
+        lcd_display_prompt(prompt);       // Display the prompt on the screen
 
-        if (prompt != '?') {
-            if (prompt == 'w') play_jingle1();
-            if (prompt == 's') play_jingle2();
-            if (prompt == 'a') play_jingle3();
-            if (prompt == 'd') play_jingle4();
-        }
+        char input = ' ';  // Placeholder for user input
+        // Simulate getting user input (replace this with actual input handling)
+        __delay_cycles(2500000);  // Wait for user input (simulate delay)
 
-        char input = '\0';
-        while (input == '\0') {  // Wait for player input
-            input = get_player_input();
-        }
-
-        if (input == prompt || (prompt == '?' && input == 'w')) {  // Example: '?' is UP
-            lcd_correct_input();
+        if (input == prompt || (prompt == '?' && input != ' ')) {
+            lcd_correct_input();  // If input is correct, update score
         } else {
-            lcd_incorrect_input();
+            lcd_incorrect_input();  // If input is incorrect, decrement lives
         }
 
-        __delay_cycles(500000);  // Delay before the next prompt
+        if (lives <= 0) break;  // End the game when lives reach 0
     }
 
-    lcd_game_over();  // Show Game Over screen
+    lcd_game_over();  // Display game over screen
 }
 
+// Main program
 void main() {
-    configureClocks();  // Configure system clocks
-    switch_init();      // Initialize switches
+    configureClocks();      // Configure system clocks
+    switch_init();          // Initialize switches
     enableWDTInterrupts();  // Enable watchdog interrupts
-    or_sr(0x8);         // Enable low-power mode
+    or_sr(0x8);             // Enable low-power mode
 
-    play_game();        // Start the game
+    play_game();            // Start the game
 }
