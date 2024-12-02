@@ -1,15 +1,16 @@
 #include <stdint.h>  // Provides uint8_t, uint16_t, etc.
-
-// Define missing types expected by lcddraw.h
-typedef unsigned char u_char;
-typedef unsigned int u_int;
-
-#include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
-#include "../lcdLib/lcdutils.h" // Correct path to lcdutils.h
+#include <stdlib.h>  // For rand()
+#include "../lcdLib/lcddraw.h"
+#include "../lcdLib/lcdutils.h"
 #include "buzzer.h"
 #include "libTimer.h"
 #include "lcdgame.h"
 #include "switches.h"
+
+typedef unsigned char u_char;
+typedef unsigned int u_int;
+
+extern int lives;  // Access global lives variable from lcdgame.c
 
 // Generate a random prompt from available options
 char generate_prompt() {
