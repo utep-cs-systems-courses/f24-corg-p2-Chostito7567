@@ -1,9 +1,19 @@
-#include "../lcdLib/lcddraw.h"  // Correct path to lcddraw.h
+#include <stdint.h>  // Provides uint8_t, uint16_t, etc.
 
-#define MAX_LIVES 3  // Maximum number of lives a player has
+// Define missing types expected by lcddraw.h
+typedef unsigned char u_char;
+typedef unsigned int u_int;
 
-int lives = MAX_LIVES;  // Declare `lives` as a global variable
-static int score = 0;   // The player's current score
+#include "./lcdLib/lcddraw.h"
+#include "./lcdLib/lcdutils.h"
+
+// Placeholder screen dimensions
+#define screenWidth 128
+#define screenHeight 128
+
+// Global variables for the game state
+int lives = 3;
+static int score = 0;
 
 void lcd_game_init() {
     clearScreen(COLOR_BLACK);  // Set the screen to black
