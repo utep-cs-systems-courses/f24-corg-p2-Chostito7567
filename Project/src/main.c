@@ -4,8 +4,8 @@
 typedef unsigned char u_char;
 typedef unsigned int u_int;
 
-#include "./lcdLib/lcddraw.h"
-#include "./lcdLib/lcdutils.h"
+#include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
+#include "../lcdLib/lcdutils.h" // Correct path to lcdutils.h
 #include "buzzer.h"
 #include "libTimer.h"
 #include "lcdgame.h"
