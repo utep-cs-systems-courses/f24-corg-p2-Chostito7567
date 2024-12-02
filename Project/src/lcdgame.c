@@ -4,8 +4,8 @@
 typedef unsigned char u_char;
 typedef unsigned int u_int;
 
-#include "./lcdLib/lcddraw.h"
-#include "./lcdLib/lcdutils.h"
+#include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
+#include "../lcdLib/lcdutils.h"  // Correct path to lcdutils.h
 
 // Placeholder screen dimensions
 #define screenWidth 128
