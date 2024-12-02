@@ -1,7 +1,8 @@
 #include <msp430.h>
-#include "lcdgame.h"  // LCD handling functions
-#include "switches.h" // Button handling functions
-#include "buzzer.h"   // Jingle functions
+#include "buzzer.h"    // For play_jingle1, play_jingle2, etc.
+#include "libTimer.h"  // For configureClocks, enableWDTInterrupts, or_sr
+#include "lcdgame.h"   // LCD handling functions
+#include "switches.h"  // Button handling
 
 // Function to generate random prompts
 char generate_prompt() {
