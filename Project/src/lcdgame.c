@@ -7,12 +7,10 @@ typedef unsigned int u_int;
 #include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
 #include "../lcdLib/lcdutils.h"  // Correct path to lcdutils.h
 
-// Placeholder screen dimensions
 #define screenWidth 128
 #define screenHeight 128
 
-// Global variables for the game state
-int lives = 3;
+int lives = 3;  // Global variable for lives
 static int score = 0;
 
 void lcd_game_init() {
