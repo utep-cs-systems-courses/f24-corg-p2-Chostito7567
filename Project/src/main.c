@@ -1,16 +1,17 @@
 #include <msp430.h>
-#include "buzzer.h"    // For play_jingle1, play_jingle2, etc.
+#include <stdlib.h>    // For rand()
+#include "buzzer.h"    // Provides play_jingle1, play_jingle2, etc.
 #include "libTimer.h"  // For configureClocks, enableWDTInterrupts, or_sr
 #include "lcdgame.h"   // LCD handling functions
 #include "switches.h"  // Button handling
 
-// Function to generate random prompts
+// Generate a random prompt
 char generate_prompt() {
     char prompts[] = {'w', 's', 'a', 'd', '?'};  // w=UP, s=DOWN, a=LEFT, d=RIGHT
     return prompts[rand() % 5];  // Return a random prompt
 }
 
-// Function to get player's input from buttons
+// Read player input
 char get_player_input() {
     char p2val = P2IN;  // Read switch input
     if (!(p2val & SW1)) return 'w';  // SW1 for UP
