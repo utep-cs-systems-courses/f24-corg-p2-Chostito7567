@@ -1,17 +1,15 @@
 #ifndef LCDGAME_H
 #define LCDGAME_H
 
-#include "../lcdLib/lcdutils.h"  // Correct path to lcdutils.h
-#include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
+// Declare global variables and functions
+extern int lives;
 
-extern int lives;  // Declare `lives` as a global variable
-
-void lcd_game_init();
-void lcd_display_score();
-void lcd_display_lives();
-void lcd_display_prompt(char prompt);
-void lcd_correct_input();
-void lcd_incorrect_input();
-void lcd_game_over();
+void lcd_game_init();           // Initialize the LCD
+void lcd_display_score();       // Display the player's score
+void lcd_display_lives();       // Display remaining lives
+void lcd_display_prompt(char);  // Display a prompt (e.g., arrows or ?)
+void lcd_correct_input();       // Handle correct input
+void lcd_incorrect_input();     // Handle incorrect input
+void lcd_game_over();           // Display game over screen
 
 #endif // LCDGAME_H
