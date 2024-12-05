@@ -36,7 +36,7 @@ void play_jingle2() {
 }
 
 void play_jingle3() {
-    short jingle3[] = {800, 0, 600, 0, 400, 0, 200, 0}; // Low-frequency descending tones
+    short jingle3[] = {2000, 0, 1600, 0, 1200, 0, 800, 0}; // Low-frequency descending tones
     for (int i = 0; i < 8; i++) {
         buzzer_set_period(jingle3[i]);
         __delay_cycles(500000);
