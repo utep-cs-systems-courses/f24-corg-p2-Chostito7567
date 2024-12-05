@@ -1,3 +1,5 @@
+
+
 #include <msp430.h>
 #include "led.h"
 #include "stateMachines.h"
@@ -5,13 +7,19 @@
 #include "switches.h"
 #include "libTimer.h"
 
-// Main function
-void main() {
-    configureClocks();          // Set up the system clocks
-    switch_init();              // Initialize the switches
-    buzzer_init();              // Initialize the buzzer
-    led_init();                 // Initialize the LEDs
-    enableWDTInterrupts();      // Enable the watchdog timer interrupts
+void main()
+{
+    // Timer
+    configureClocks();          // Start Lib Timer
 
-    or_sr(0x18);                // Enter low-power mode with interrupts enabled
+    // Initialize 
+    switch_init();              // Setup Switches
+    buzzer_init();              // Call Speakers
+    led_init();                 // Call LEDs
+
+    // Watchdog
+    enableWDTInterrupts();      // Enable Watchdog Timer
+
+    // Power off CPU
+    or_sr(0x18);
 }
