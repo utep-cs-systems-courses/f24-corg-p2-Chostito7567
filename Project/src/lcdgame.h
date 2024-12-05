@@ -8,5 +8,6 @@ void lcd_display_prompt(char);  // Display a prompt (e.g., arrows or ?)
 void lcd_correct_input();       // Handle correct input
 void lcd_incorrect_input();     // Handle incorrect input
 void lcd_game_over();           // Display game over screen
+void lcd_draw_square(); // Function to draw a square
 
 #endif // LCDGAME_H
