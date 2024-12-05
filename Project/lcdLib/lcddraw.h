@@ -5,15 +5,7 @@
 #ifndef lcddraw_included
 #define lcddraw_included
 
-#include <stdint.h> // For standard integer types
-
-#ifndef u_char
-typedef uint8_t u_char; // Define u_char as an 8-bit unsigned integer
-#endif
-
-#ifndef u_int
-typedef uint16_t u_int; // Define u_int as a 16-bit unsigned integer
-#endif
+#include <stdint.h> // Use standard integer types
 
 /** Draw single pixel at col, row 
  *
@@ -21,23 +13,23 @@ typedef uint16_t u_int; // Define u_int as a 16-bit unsigned integer
  *  \param row Row to draw to
  *  \param colorBGR Color of pixel in BGR
  */
-void drawPixel(u_char col, u_char row, u_int colorBGR);
+void drawPixel(uint8_t col, uint8_t row, uint16_t colorBGR);
 
 /** Fill rectangle
  *
  *  \param colMin Column start
  *  \param rowMin Row start
  *  \param width Width of rectangle
- *  \param height Height of rectangle
+ *  \param height height of rectangle
  *  \param colorBGR Color of rectangle in BGR
  */
-void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height, u_int colorBGR);
+void fillRectangle(uint8_t colMin, uint8_t rowMin, uint8_t width, uint8_t height, uint16_t colorBGR);
 
 /** Clear screen (fill with color)
  *  
  *  \param colorBGR The color to fill screen
  */
-void clearScreen(u_int colorBGR);
+void clearScreen(uint16_t colorBGR);
 
 /** Draw string at col,row
  *  Type:
@@ -51,14 +43,14 @@ void clearScreen(u_int colorBGR);
  *  \param fgColorBGR Foreground color in BGR
  *  \param bgColorBGR Background color in BGR
  */
-void drawString5x7(u_char col, u_char row, char *string, 
-		   u_int fgColorBGR, u_int bgColorBGR);
+void drawString5x7(uint8_t col, uint8_t row, char *string, 
+		   uint16_t fgColorBGR, uint16_t bgColorBGR);
 
 /** 5x7 font - this function draws background pixels
  *  Adapted from RobG's EduKit
  */
-void drawChar5x7(u_char col, u_char row, char c, 
-		 u_int fgColorBGR, u_int bgColorBGR);
+void drawChar5x7(uint8_t col, uint8_t row, char c, 
+		 uint16_t fgColorBGR, uint16_t bgColorBGR);
 
 /** Draw rectangle outline
  *  
@@ -68,7 +60,7 @@ void drawChar5x7(u_char col, u_char row, char c,
  *  \param height Height of rectangle
  *  \param colorBGR Color of rectangle in BGR
  */
-void drawRectOutline(u_char colMin, u_char rowMin, u_char width, u_char height,
-		     u_int colorBGR);
+void drawRectOutline(uint8_t colMin, uint8_t rowMin, uint8_t width, uint8_t height,
+		     uint16_t colorBGR);
 
 #endif // included
