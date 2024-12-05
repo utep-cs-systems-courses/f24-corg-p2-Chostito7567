@@ -54,5 +54,9 @@ void main() {
     enableWDTInterrupts(); // Enable watchdog timer interrupts
     or_sr(0x8);            // Enter low-power mode with interrupts
 
-    play_game();           // Start the game
+    // Debugging message
+    while (1) {
+        drawString5x7(10, 10, "MAIN RUNNING", COLOR_WHITE, COLOR_BLACK);  // Debug message
+        __delay_cycles(1000000);  // Delay to avoid spamming
+    }
 }
