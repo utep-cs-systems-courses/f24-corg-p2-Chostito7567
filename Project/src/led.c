@@ -1,33 +1,30 @@
 #include <msp430.h>
 #include "led.h"
 
-// Global variables to track LED changes
 unsigned char led_changed = 0, green_on = 0, red_on = 0, led_state = 0;
 
-// Initialize LEDs
 void led_init() {
-    P1DIR |= LEDS;          // Set LED pins (P1.0 and P1.6) as outputs
-    led_changed = 1;        // Mark the LEDs as needing an update
-    led_update();           // Update the LED state immediately
+    P1DIR |= LEDS; // Set LED pins as output
+    led_changed = 1;
+    led_update();
 }
 
-// Update LEDs based on the current state
 void led_update() {
-    if (led_changed) {      // Only update if something has changed
+    if (led_changed) {
         switch (led_state) {
         case 0:
-            P1OUT = LED_RED;       // Turn on red LED only
+            P1OUT = LED_RED; // Only red LED on
             break;
         case 1:
-            P1OUT = LED_GREEN;     // Turn on green LED only
+            P1OUT = LED_GREEN; // Only green LED on
             break;
         case 2:
-            P1OUT = LEDS;          // Turn on both LEDs
+            P1OUT = LEDS; // Both LEDs on
             break;
         case 3:
-            P1OUT = 0;             // Turn off both LEDs
+            P1OUT = 0; // Both LEDs off
             break;
         }
-        led_changed = 0;    // Reset the flag after updating
+        led_changed = 0;
     }
 }
