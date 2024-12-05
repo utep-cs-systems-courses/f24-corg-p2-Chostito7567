@@ -1,15 +1,17 @@
+
+
 #include <msp430.h>
 #include "stateMachines.h"
 
-// Watchdog Timer interrupt handler
-void __interrupt_vec(WDT_VECTOR) WDT() {
-    static char blink_count = 0;  // Counter for slow clock
+void
+__interrupt_vec(WDT_VECTOR) WDT(){	/* 250 interrupts/sec */
+  static char blink_count = 0;
+  if (++blink_count == 125) {
+     sm_slow_clock();
+     blink_count = 0;
+  }
+  sm_fast_clock();
+  sm_update_led();
 
-    if (++blink_count == 125) {  // Slow clock updates every 125 interrupts
-        sm_slow_clock();
-        blink_count = 0;
-    }
-    sm_fast_clock();       // Fast clock updates every interrupt
-    sm_update_led();       // Update LED brightness
-    led_update();          // Apply LED changes
+  led_update();
 }
