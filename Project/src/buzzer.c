@@ -2,6 +2,7 @@
 #include "buzzer.h"
 #include "libTimer.h"
 
+// Initializes the buzzer
 void buzzer_init() {
     timerAUpmode();  // Set up Timer A
     P2SEL2 &= ~(BIT6 | BIT7);
@@ -10,7 +11,8 @@ void buzzer_init() {
     P2DIR |= BIT6;
 }
 
+// Sets the buzzer frequency
 void buzzer_set_period(short cycles) {
-    CCR0 = cycles;
-    CCR1 = cycles >> 1;  // 50% duty cycle
+    CCR0 = cycles;           // Set period
+    CCR1 = cycles >> 1;      // Set 50% duty cycle
 }
