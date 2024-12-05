@@ -1,25 +1,21 @@
-COMMON_OBJECTS  =
-CPU             = msp430g2553
-CFLAGS          = -mmcu=${CPU} -I../h
-LDFLAGS         = -L/opt/ti/msp430_gcc/include
+COMMON_OBJECTS  =       # This can hold shared object files if needed
+CPU             = msp430g2553    # Specifies the microcontroller model
+CFLAGS          = -mmcu=${CPU} -I../h   # Compiler flags to specify the microcontroller and header paths
+LDFLAGS         = -L/opt/ti/msp430_gcc/include   # Linker flags for library paths
 
-CC              = msp430-elf-gcc
-AS              = msp430-elf-as
-
+# Default target: build the project
 all: main.elf
-	(cd ../timerLib; make)
+	(cd ../timerLib; make)  # Compile the timer library in its directory
 
-main.elf: ${COMMON_OBJECTS} main.c switches.o buzzer.o p2_interrupt_handler.o wdInterruptHandler.o ../timerLib/libTimer.a
+# Link all the necessary object files and create the main executable
+main.elf: ${COMMON_OBJECTS} main.c stateMachines.o led.o wdInterruptHandler.o p2_interrupt_handler.o switches.o buzzer.o ../timerLib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
+# Upload the compiled program to the microcontroller
 load: main.elf
 	msp430loader.sh main.elf
 
+# Clean up all generated files
 clean:
 	rm -f -r *.o *.elf *shell* *shell*~ *~
-	(cd ../timerLib; make clean)
-
-switches.o: switches.c switches.h
-buzzer.o: buzzer.c buzzer.h
-wdInterruptHandler.o: wdInterruptHandler.c
-p2_interrupt_handler.o: p2_interrupt_handler.c
+	(cd ../timerLib; make clean)  # Also clean the timer library directory
