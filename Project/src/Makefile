@@ -29,6 +29,6 @@ led.o: led.c led.h
 switches.o: switches.c switches.h
 buzzer.o: buzzer.c buzzer.h
 lcdgame.o: lcdgame.c lcdgame.h
-font.o: font.c lcdutils.h
+font-5x7.o: font-5x7.c lcdutils.h
 wdInterruptHandler.o: wdInterruptHandler.c
 p2_interrupt_handler.o: p2_interrupt_handler.c
