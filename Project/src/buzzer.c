@@ -45,7 +45,7 @@ void play_jingle3() {
 }
 
 void play_jingle4() {
-    short jingle4[] = {1500, 0, 900, 0, 700, 0, 500, 0}; // Mixed range, starting high and dipping lower
+    short jingle4[] = {1900, 0, 1700, 0, 1500, 0, 1300, 0}; // Mixed range, starting high and dipping lower
     for (int i = 0; i < 8; i++) {
         buzzer_set_period(jingle4[i]);
         __delay_cycles(500000);
