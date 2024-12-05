@@ -1,10 +1,18 @@
 #include <msp430.h>
 #include "switches.h"
-#include "buzzer.h"
+
+// Initializes the switches
+void switch_init() {
+    P2REN |= SWITCHES;   // Enable resistors for switches
+    P2IE |= SWITCHES;    // Enable interrupts for switches
+    P2OUT |= SWITCHES;   // Set switches to pull-up
+    P2DIR &= ~SWITCHES;  // Set switches as input
+    P2IFG &= ~SWITCHES;  // Clear any pending interrupts
+}
 
 // Handles button press interrupts
 void switch_interrupt_handler() {
-    char p2val = P2IN;
+    char p2val = P2IN;  // Read current state of P2 switches
 
     if (!(p2val & SW1)) {
         play_jingle1();  // Play Jingle 1 for Button 1
