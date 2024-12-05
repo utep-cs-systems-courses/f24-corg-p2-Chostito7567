@@ -1,5 +1,8 @@
 #include <msp430.h>
 #include "switches.h"
+#include "buzzer.h"  // Include buzzer.h to declare play_jingleX
+#include "../lcdLib/lcddraw.h"
+#include "../lcdLib/lcdutils.h"
 
 // Initializes the switches
 void switch_init() {
@@ -16,11 +19,15 @@ void switch_interrupt_handler() {
 
     if (!(p2val & SW1)) {
         play_jingle1();  // Play Jingle 1 for Button 1
+        drawString5x7(10, 50, "SW1 PRESSED", COLOR_GREEN, COLOR_BLACK);  // Debug on LCD
     } else if (!(p2val & SW2)) {
         play_jingle2();  // Play Jingle 2 for Button 2
+        drawString5x7(10, 60, "SW2 PRESSED", COLOR_YELLOW, COLOR_BLACK);
     } else if (!(p2val & SW3)) {
         play_jingle3();  // Play Jingle 3 for Button 3
+        drawString5x7(10, 70, "SW3 PRESSED", COLOR_BLUE, COLOR_BLACK);
     } else if (!(p2val & SW4)) {
         play_jingle4();  // Play Jingle 4 for Button 4
+        drawString5x7(10, 80, "SW4 PRESSED", COLOR_RED, COLOR_BLACK);
     }
 }
