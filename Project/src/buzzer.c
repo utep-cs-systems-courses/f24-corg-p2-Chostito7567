@@ -2,27 +2,53 @@
 #include "buzzer.h"
 #include "libTimer.h"
 
-// Initialize the buzzer
 void buzzer_init() {
-    timerAUpmode();       // Configure Timer A in up mode
-    P2SEL2 &= ~(BIT6 | BIT7);  // Set P2.6 for peripheral function
+    // Configure P2.6 for buzzer output
+    timerAUpmode();
+    P2SEL2 &= ~(BIT6 | BIT7);
     P2SEL &= ~BIT7;
-    P2SEL |= BIT6;         // Select Timer A output for P2.6
-    P2DIR |= BIT6;         // Set P2.6 as an output
+    P2SEL |= BIT6;
+    P2DIR |= BIT6;
 }
 
-// Set the buzzer frequency (number of cycles per second)
 void buzzer_set_period(short cycles) {
-    CCR0 = cycles;          // Set the period of the PWM signal
-    CCR1 = cycles >> 1;     // Set a 50% duty cycle (on for half the time)
+    CCR0 = cycles;
+    CCR1 = cycles >> 1; // 50% duty cycle
 }
 
-// Play a predefined jingle (array of frequencies)
+// Define different jingles for each button
 void play_jingle1() {
-    short jingle1[] = {1000, 0, 800, 0, 600, 0, 400, 0};  // Frequencies and pauses
+    short jingle1[] = {1000, 0, 800, 0, 600, 0, 400, 0};
     for (int i = 0; i < 8; i++) {
-        buzzer_set_period(jingle1[i]);  // Set the buzzer frequency
-        __delay_cycles(500000);        // Delay for half a second
+        buzzer_set_period(jingle1[i]);
+        __delay_cycles(500000);
     }
-    buzzer_set_period(0);              // Turn off the buzzer at the end
+    buzzer_set_period(0); // Turn off sound
+}
+
+void play_jingle2() {
+    short jingle2[] = {500, 0, 700, 0, 900, 0, 1100, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle2[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
+}
+
+void play_jingle3() {
+    short jingle3[] = {1200, 0, 1000, 0, 800, 0, 600, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle3[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
+}
+
+void play_jingle4() {
+    short jingle4[] = {1500, 0, 1300, 0, 1100, 0, 900, 0};
+    for (int i = 0; i < 8; i++) {
+        buzzer_set_period(jingle4[i]);
+        __delay_cycles(500000);
+    }
+    buzzer_set_period(0);
 }
