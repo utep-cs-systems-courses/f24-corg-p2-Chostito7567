@@ -18,7 +18,7 @@ void buzzer_set_period(short cycles) {
 
 // Define different jingles for each button
 void play_jingle1() {
-    short jingle1[] = {2000, 0, 1800, 0, 1600, 0, 1400, 0}; // Higher frequency range
+    short jingle1[] = {1200, 0, 1000, 0, 800, 0, 600, 0}; // Higher frequency range
     for (int i = 0; i < 8; i++) {
         buzzer_set_period(jingle1[i]);
         __delay_cycles(500000);
