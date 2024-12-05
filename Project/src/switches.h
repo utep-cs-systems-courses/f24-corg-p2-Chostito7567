@@ -7,7 +7,7 @@
 #define SW4 BIT3       // Button 4
 #define SWITCHES (SW1 | SW2 | SW3 | SW4)
 
-void switch_init();
-void switch_interrupt_handler();
+void switch_init();               // Initialize switches
+void switch_interrupt_handler();  // Handle switch interrupts
 
 #endif // switches_included
