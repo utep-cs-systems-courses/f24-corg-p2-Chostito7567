@@ -2,51 +2,27 @@
 #include "buzzer.h"
 #include "libTimer.h"
 
+// Initialize the buzzer
 void buzzer_init() {
-    timerAUpmode();        // Initialize Timer A
-    P2SEL2 &= ~(BIT6 | BIT7); // Set buzzer pin function
+    timerAUpmode();       // Configure Timer A in up mode
+    P2SEL2 &= ~(BIT6 | BIT7);  // Set P2.6 for peripheral function
     P2SEL &= ~BIT7;
-    P2SEL |= BIT6;
-    P2DIR |= BIT6;         // Set buzzer pin as output
+    P2SEL |= BIT6;         // Select Timer A output for P2.6
+    P2DIR |= BIT6;         // Set P2.6 as an output
 }
 
+// Set the buzzer frequency (number of cycles per second)
 void buzzer_set_period(short cycles) {
-    CCR0 = cycles;         // Set buzzer period
-    CCR1 = cycles >> 1;    // 50% duty cycle
+    CCR0 = cycles;          // Set the period of the PWM signal
+    CCR1 = cycles >> 1;     // Set a 50% duty cycle (on for half the time)
 }
 
+// Play a predefined jingle (array of frequencies)
 void play_jingle1() {
-    short notes[] = {1000, 0, 800, 0, 600, 0, 400, 0};
+    short jingle1[] = {1000, 0, 800, 0, 600, 0, 400, 0};  // Frequencies and pauses
     for (int i = 0; i < 8; i++) {
-        buzzer_set_period(notes[i]);
-        __delay_cycles(500000);
+        buzzer_set_period(jingle1[i]);  // Set the buzzer frequency
+        __delay_cycles(500000);        // Delay for half a second
     }
-    buzzer_set_period(0);  // Turn off buzzer
-}
-
-void play_jingle2() {
-    short notes[] = {500, 0, 700, 0, 900, 0, 1100, 0};
-    for (int i = 0; i < 8; i++) {
-        buzzer_set_period(notes[i]);
-        __delay_cycles(500000);
-    }
-    buzzer_set_period(0);
-}
-
-void play_jingle3() {
-    short notes[] = {1200, 0, 1000, 0, 800, 0, 600, 0};
-    for (int i = 0; i < 8; i++) {
-        buzzer_set_period(notes[i]);
-        __delay_cycles(500000);
-    }
-    buzzer_set_period(0);
-}
-
-void play_jingle4() {
-    short notes[] = {1500, 0, 1300, 0, 1100, 0, 900, 0};
-    for (int i = 0; i < 8; i++) {
-        buzzer_set_period(notes[i]);
-        __delay_cycles(500000);
-    }
-    buzzer_set_period(0);
+    buzzer_set_period(0);              // Turn off the buzzer at the end
 }
