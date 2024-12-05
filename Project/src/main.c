@@ -1,55 +1,52 @@
-#include <stdint.h>  // Standard types like uint8_t, uint16_t
-#include <stdlib.h>  // For rand()
-
-// Define missing types expected by lcddraw.h
-typedef unsigned char u_char;
-typedef unsigned int u_int;
-
-#include "../lcdLib/lcddraw.h"   // Correct path to lcddraw.h
-#include "../lcdLib/lcdutils.h" // Correct path to lcdutils.h
+#include <stdint.h>
+#include <stdlib.h>   // For rand()
+#include "../lcdLib/lcddraw.h"
+#include "../lcdLib/lcdutils.h"
 #include "buzzer.h"
 #include "libTimer.h"
 #include "lcdgame.h"
 #include "switches.h"
 
-extern int lives;  // Declare lives as external
+typedef unsigned char u_char;
+typedef unsigned int u_int;
 
-// Generate a random prompt from available options
+extern int lives;  // Global variable for lives
+
 char generate_prompt() {
-    char prompts[] = {'w', 'a', 's', 'd', '?'};  // Available prompts
-    return prompts[rand() % 5];                  // Return a random prompt
+    char prompts[] = {'w', 'a', 's', 'd', '?'};
+    return prompts[rand() % 5];
 }
 
-// Main game logic
 void play_game() {
-    lcd_game_init();  // Initialize the game display
+    lcd_game_init();
 
     while (1) {
-        char prompt = generate_prompt();  // Generate a random prompt
-        lcd_display_prompt(prompt);       // Display the prompt on the screen
+        char prompt = generate_prompt();
+        lcd_display_prompt(prompt);
 
-        char input = ' ';  // Placeholder for user input
-        // Simulate getting user input (replace this with actual input handling)
-        __delay_cycles(2500000);  // Wait for user input (simulate delay)
+        char input = ' ';  // Placeholder for input
+        __delay_cycles(2500000);  // Simulate delay
 
         if (input == prompt || (prompt == '?' && input != ' ')) {
-            lcd_correct_input();  // If input is correct, update score
+            lcd_correct_input();
         } else {
-            lcd_incorrect_input();  // If input is incorrect, decrement lives
+            lcd_incorrect_input();
         }
 
-        if (lives <= 0) break;  // End the game when lives reach 0
+        if (lives <= 0) break;
     }
 
-    lcd_game_over();  // Display game over screen
+    lcd_game_over();
 }
 
-// Main program
 void main() {
-    configureClocks();      // Configure system clocks
-    switch_init();          // Initialize switches
-    enableWDTInterrupts();  // Enable watchdog interrupts
-    or_sr(0x8);             // Enable low-power mode
+    configureClocks();
+    lcd_init();       // Initialize LCD
+    buzzer_init();    // Initialize buzzer
+    switch_init();    // Initialize switches
 
-    play_game();            // Start the game
+    enableWDTInterrupts();  // Enable watchdog
+    or_sr(0x8);             // Low-power mode
+
+    play_game();  // Start the game
 }
