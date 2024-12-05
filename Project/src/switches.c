@@ -5,26 +5,23 @@
 
 char switch_state_down, switch_state_changed;
 
-// Update the interrupt sense for switches
 static char switch_update_interrupt_sense() {
-    char p2val = P2IN;            // Read the current state of P2
-    P2IES |= (p2val & SWITCHES);  // Set edge detect for high-to-low transitions
-    P2IES &= (p2val | ~SWITCHES); // Set edge detect for low-to-high transitions
+    char p2val = P2IN;
+    P2IES |= (p2val & SWITCHES);   // Sense high-to-low
+    P2IES &= (p2val | ~SWITCHES);  // Sense low-to-high
     return p2val;
 }
 
-// Initialize switches
 void switch_init() {
     P2REN |= SWITCHES;  // Enable resistors for switches
-    P2IE |= SWITCHES;   // Enable interrupts for switches
-    P2OUT |= SWITCHES;  // Set pull-up resistors
-    P2DIR &= ~SWITCHES; // Set switches as inputs
+    P2IE |= SWITCHES;   // Enable interrupts from switches
+    P2OUT |= SWITCHES;  // Pull-ups for switches
+    P2DIR &= ~SWITCHES; // Set switches' bits for input
     switch_update_interrupt_sense();
 }
 
-// Handle switch interrupts
 void switch_interrupt_handler() {
-    char p2val = switch_update_interrupt_sense(); // Get switch state
+    char p2val = switch_update_interrupt_sense();
 
     if (!(p2val & SW1)) {
         play_jingle1();
@@ -39,6 +36,6 @@ void switch_interrupt_handler() {
         play_jingle4();
         led_state = 3;
     }
-    led_changed = 1;   // Mark LEDs as changed
-    led_update();      // Update the LEDs
+    led_changed = 1;
+    led_update();
 }
