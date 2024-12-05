@@ -1,24 +1,25 @@
-COMMON_OBJECTS = lcdgame.o switches.o buzzer.o led.o ../lcdLib/font-5x7.o
-CPU = msp430g2553
-CFLAGS = -mmcu=${CPU} -I../h -I../lcdLib
-LDFLAGS = -L/opt/ti/msp430_gcc/include
+COMMON_OBJECTS  =
+CPU             = msp430g2553
+CFLAGS          = -mmcu=${CPU} -I../h
+LDFLAGS         = -L/opt/ti/msp430_gcc/include
 
-CC = msp430-elf-gcc
-AS = msp430-elf-as
+CC              = msp430-elf-gcc
+AS              = msp430-elf-as
 
 all: main.elf
+	(cd ../timerLib; make)
 
-main.elf: main.o ${COMMON_OBJECTS} ../lcdLib/lcddraw.o ../lcdLib/lcdutils.o ../timerLib/libTimer.a
+main.elf: ${COMMON_OBJECTS} main.c switches.o buzzer.o p2_interrupt_handler.o wdInterruptHandler.o ../timerLib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
-
-main.o: main.c lcdgame.h switches.h buzzer.h
-lcdgame.o: lcdgame.c lcdgame.h ../lcdLib/lcddraw.h ../lcdLib/lcdutils.h
-switches.o: switches.c switches.h
-buzzer.o: buzzer.c buzzer.h
-led.o: led.c led.h
 
 load: main.elf
 	msp430loader.sh main.elf
 
 clean:
-	rm -f *.o *.elf *~
+	rm -f -r *.o *.elf *shell* *shell*~ *~
+	(cd ../timerLib; make clean)
+
+switches.o: switches.c switches.h
+buzzer.o: buzzer.c buzzer.h
+wdInterruptHandler.o: wdInterruptHandler.c
+p2_interrupt_handler.o: p2_interrupt_handler.c
