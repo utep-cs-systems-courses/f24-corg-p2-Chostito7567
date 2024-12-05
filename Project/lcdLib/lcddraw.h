@@ -1,12 +1,19 @@
+/** \file lcddraw.h
+ *  \brief Adapted from RobG's EduKit
+ */
+
 #ifndef lcddraw_included
 #define lcddraw_included
 
 #include <stdint.h> // For standard integer types
 
+#ifndef u_char
 typedef uint8_t u_char; // Define u_char as an 8-bit unsigned integer
-typedef uint16_t u_int; // Define u_int as a 16-bit unsigned integer
+#endif
 
-// Existing function declarations
+#ifndef u_int
+typedef uint16_t u_int; // Define u_int as a 16-bit unsigned integer
+#endif
 
 /** Draw single pixel at col, row 
  *
@@ -21,7 +28,7 @@ void drawPixel(u_char col, u_char row, u_int colorBGR);
  *  \param colMin Column start
  *  \param rowMin Row start
  *  \param width Width of rectangle
- *  \param height height of rectangle
+ *  \param height Height of rectangle
  *  \param colorBGR Color of rectangle in BGR
  */
 void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height, u_int colorBGR);
